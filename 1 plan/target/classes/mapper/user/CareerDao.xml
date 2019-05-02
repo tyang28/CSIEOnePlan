@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suke.czx.modules.user.user.dao.CareerDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.suke.czx.modules.user.user.entity.CareerEntity" id="careerMap">
+        <result property="careerId" column="career_id"/>
+        <result property="name" column="name"/>
+        <result property="skillId" column="skill_id"/>
+        <result property="detail" column="detail"/>
+    </resultMap>
+
+
+
+	<select id="queryList" resultType="com.suke.czx.modules.user.user.entity.CareerEntity">
+		select * from career
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by career_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from career 
+	</select>
+	 
+	<insert id="save" parameterType="com.suke.czx.modules.user.user.entity.CareerEntity" useGeneratedKeys="true" keyProperty="careerId">
+		insert into career
+		(
+			`name`, 
+			`skill_id`, 
+			`detail`
+		)
+		values
+		(
+			#{name}, 
+			#{skillId}, 
+			#{detail}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.suke.czx.modules.user.user.entity.CareerEntity">
+		update career 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="skillId != null">`skill_id` = #{skillId}, </if>
+			<if test="detail != null">`detail` = #{detail}</if>
+		</set>
+		where career_id = #{careerId}
+	</update>
+	
+	<delete id="delete">
+		delete from career where career_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from career where career_id in 
+		<foreach item="careerId" collection="array" open="(" separator="," close=")">
+			#{careerId}
+		</foreach>
+	</delete>
+
+</mapper>

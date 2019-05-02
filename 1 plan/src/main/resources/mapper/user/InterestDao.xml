@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suke.czx.modules.user.user.dao.InterestDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.suke.czx.modules.user.user.entity.InterestEntity" id="interestMap">
+        <result property="interId" column="inter_id"/>
+        <result property="name" column="name"/>
+        <result property="skillId" column="skill_id"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.suke.czx.modules.user.user.entity.InterestEntity">
+		select * from interest where inter_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.suke.czx.modules.user.user.entity.InterestEntity">
+		select * from interest
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by inter_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from interest 
+	</select>
+	 
+	<insert id="save" parameterType="com.suke.czx.modules.user.user.entity.InterestEntity" useGeneratedKeys="true" keyProperty="interId">
+		insert into interest
+		(
+			`name`, 
+			`skill_id`
+		)
+		values
+		(
+			#{name}, 
+			#{skillId}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.suke.czx.modules.user.user.entity.InterestEntity">
+		update interest 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="skillId != null">`skill_id` = #{skillId}</if>
+		</set>
+		where inter_id = #{interId}
+	</update>
+	
+	<delete id="delete">
+		delete from interest where inter_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from interest where inter_id in 
+		<foreach item="interId" collection="array" open="(" separator="," close=")">
+			#{interId}
+		</foreach>
+	</delete>
+
+</mapper>

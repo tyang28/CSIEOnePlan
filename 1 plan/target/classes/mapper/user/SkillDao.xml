@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suke.czx.modules.user.user.dao.SkillDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.suke.czx.modules.user.user.entity.SkillEntity" id="skillMap">
+        <result property="skillId" column="skill_id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.suke.czx.modules.user.user.entity.SkillEntity">
+		select * from skill where skill_id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.suke.czx.modules.user.user.entity.SkillEntity">
+		select * from skill
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by skill_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from skill 
+	</select>
+	 
+	<insert id="save" parameterType="com.suke.czx.modules.user.user.entity.SkillEntity" useGeneratedKeys="true" keyProperty="skillId">
+		insert into skill
+		(
+			`name`
+		)
+		values
+		(
+			#{name}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.suke.czx.modules.user.user.entity.SkillEntity">
+		update skill 
+		<set>
+			<if test="name != null">`name` = #{name}</if>
+		</set>
+		where skill_id = #{skillId}
+	</update>
+	
+	<delete id="delete">
+		delete from skill where skill_id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from skill where skill_id in 
+		<foreach item="skillId" collection="array" open="(" separator="," close=")">
+			#{skillId}
+		</foreach>
+	</delete>
+
+</mapper>

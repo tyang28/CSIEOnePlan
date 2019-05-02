@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: vevocube
+Build-Jdk: 12.0.1
+Implementation-Title: x_springboot
+Implementation-Version: 1.0.0
+Implementation-Vendor-Id: x_springboot
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-URL: http://projects.spring.io/spring-boot/x_springboot/
+Created-By: Maven Integration for Eclipse
+
